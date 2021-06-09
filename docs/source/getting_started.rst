@@ -2,10 +2,10 @@ Getting started
 ===============
 Required files for using the tool can be found in the docket associated with the rulemaking.
 
-In addition, the code repository can be found at https://github.com/toddsherwood-EPA/postproc_model_runs.
-If you would like access to the actual repository, please use the email address below to request access.
+In addition, the code repository can be found at https://github.com/USEPA/EPA_CCEMS_PostProcessingTool.
 Navigate to the above link and select "Clone or download" to either clone the repository to your local machine or download it as a ZIP file. Alternatively, you may wish to Fork the repo to your
 local machine if you intend to suggest changes to the code via a pull request.
+If you have trouble with the repository, please use the email address below for help.
 
 Setting up a Python environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

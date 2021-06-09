@@ -21,9 +21,10 @@ sys.path.insert(0, os.path.join(path, '..', '..', 'tool_code'))
 # -- Project information -----------------------------------------------------
 
 project = 'EPA_CCEMS_PostProcessingTool'
-copyright = '2021, OTAQ/ASD/tsherwoo'
-author = 'OTAQ/ASD/tsherwoo'
+copyright = '2021, EPA/OAR/OTAQ/ASD'
+author = 'OTAQ/Assessment and Standards Division'
 
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 
