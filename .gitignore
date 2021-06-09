@@ -1,0 +1,15 @@
+input
+inputs
+output
+outputs
+runs
+venv
+
+build
+dist
+dev
+docs/build
+supporting
+.pytest_cache
+.coverage
+.idea
