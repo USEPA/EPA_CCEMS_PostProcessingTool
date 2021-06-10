@@ -24,7 +24,7 @@ project = 'EPA_CCEMS_PostProcessingTool'
 copyright = '2021, EPA/OAR/OTAQ/ASD'
 author = 'OTAQ/Assessment and Standards Division'
 
-release = '0.1.0'
+release = '0.1.1'
 
 # -- General configuration ---------------------------------------------------
 
