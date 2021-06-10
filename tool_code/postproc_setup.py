@@ -22,7 +22,7 @@ class SetInputs:
     start_time = time()
 
     # set what to run
-    run_primary_runs = True # do this OR sensitities, but not both at the same time
+    run_primary_runs = True # do this OR sensitivities, but not both at the same time
     run_sensitivity_runs = False # do this OR the primary, but not both at the same time
     run_copy_paster = True
     run_compliance_report = True

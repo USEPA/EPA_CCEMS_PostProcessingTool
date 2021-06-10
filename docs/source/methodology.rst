@@ -78,52 +78,125 @@ Calculations and Equations
 This is not meant to be an exhaustive list of all equations used in the tool, but rather a list of those that are considered to be of most interest. The associated draft Regulatory Impact Analysis (RIA)
 also contains explanations of calculations made.
 
-Total social costs, benefits and net benefits
----------------------------------------------
+Total social costs, social benefits and net social benefits
+-----------------------------------------------------------
 
-Benefits and costs are calculated relative to a base-case scenario as set in the SetInputs class. The current setting is "2020hold" and, as such, all "Total Social Benefits" and "Total Social Costs"
-along with "Net Social Benefits" are calculated relative that scenario. This scenario is used only for that purpose so those total social costs and benefits as output via this tool should not be seen
-as absolute valuations. Instead, total costs and total benefits and net benefits should be calculated as increments from an appropriate "No Action" case within the output files. For example, in the
-NPRM analysis, the no action case is comprised of CA framework OEMs meeting the framework while non-framework OEMs meet the SAFE FRM ("Framework_Safe"). The action case is comprised of framework OEMs
-meeting the framework and then meeting the proposal for 2023 and later while non-framework OEMs meet SAFE standards and then the proposal for 2023 and later ("Fw-To-Proposal_Safe-To-Proposal"). These
-two scenarios should be chosen carefully from the output files to calculate any incremental costs, benefits and net benefits of the proposal relative to the no action case.
+New parameters calculated within each scenario
+..............................................
 
-The tool also adds some calculations that are not part of the CCEMS. Those are FatalityCost_Net, NonFatalCrashCosts_Net.
+The following parameters are unique to the tool and represent a different accounting process compared to that followed internal to the CCEMS model. The above parameters calculate net results of fatality
+costs with fatality risk values and non-fatal crash costs with non-fatal crash risk values. These net valuations are included as costs in the tool's accounting. These calculations are done for each
+scenario and within each scenario. The equations shown below (equations :math:numref:`fc_net` and :math:numref:`nfc_net`) illustrate the calculations used in the tool.
+
+- FatalityCosts_Net
+- NonFatalCrashCosts_Net
+
+The following criteria and GHG parameters are unique to the tool and are calculated consistent with CCEMS (tons * $/ton) but include more granularity and all GHG valuations simultaneously.
+
+- PM25_Costs_tailpipe_3.0
+- PM25_Costs_upstream_3.0
+- NOx_Costs_tailpipe_3.0
+- NOx_Costs_upstream_3.0
+- SO2_Costs_tailpipe_3.0
+- SO2_Costs_upstream_3.0
+- PM25_Costs_tailpipe_7.0
+- PM25_Costs_upstream_7.0
+- NOx_Costs_tailpipe_7.0
+- NOx_Costs_upstream_7.0
+- SO2_Costs_tailpipe_7.0
+- SO2_Costs_upstream_7.0
+- Criteria_Costs_tailpipe_3.0
+- Criteria_Costs_upstream_3.0
+- Criteria_Costs_tailpipe_7.0
+- Criteria_Costs_upstream_7.0
+- Criteria_Costs_3.0
+- Criteria_Costs_7.0
+- CO2_Costs_5.0
+- CO2_Costs_3.0
+- CO2_Costs_2.5
+- CO2_Costs_3.0_95
+- CH4_Costs_5.0
+- CH4_Costs_3.0
+- CH4_Costs_2.5
+- CH4_Costs_3.0_95
+- N2O_Costs_5.0
+- N2O_Costs_3.0
+- N2O_Costs_2.5
+- N2O_Costs_3.0_95
+- GHG_Costs_5.0
+- GHG_Costs_3.0
+- GHG_Costs_2.5
+- GHG_Costs_3.0_95
 
 FatalityCosts_Net
-.................
+*****************
+
+This is a new parameter that is included in the cost and cost summary reports of the tool.
 
 .. math::
     :label: fc_net
 
     & FatalityCostsNet
 
-    & =\small(FatalityCosts_{Action} - FatalityCosts_{NoAction})
-
-    & - \small(FatalityRiskValue_{Action} - FatalityRiskValue_{NoAction})
+    & =\small(FatalityCosts - FatalityRiskValue)
 
 NonFatalCrashCosts_Net
-......................
+**********************
+
+This is a new parameter that is included in the cost and cost summary reports of the tool.
 
 .. math::
     :label: nfc_net
 
     & NonFatalCrashCostsNet
 
-    & =\small(NonFatalCrashCosts_{Action} - NonFatalCrashCosts_{NoAction})
-
-    & - \small(NonFatalCrashRiskValue_{Action} - NonFatalCrashRiskValue_{NoAction})
+    & =\small(NonFatalCrashCosts - NonFatalCrashRiskValue)
 
 
-Total Social Costs
-..................
+New or revised parameters calculated relative to a base scenario
+................................................................
 
-The total social costs are calculated as shown in equation :math:numref:`costs`
+The CCEMS calculates, internal to CCEMS, terms referred to as "Total Social Benefits," "Total Social Costs" and "Net Social Benefits." The tool characterizes some parameters differently than does
+the CCEMS and also introduces some new parameters not included in the CCEMS calculations. All of these parameters are calculated relative to a base-case scenario as set in the SetInputs class.
+The current setting is "2020hold" and, as such, the following parameters are all calculated relative to that base scenario.
+
+- TotalCosts
+- FuelSavings
+- NonEmissionBenefits
+- TotalBenefits_Criteria_Costs_3.0_GHG_Costs_5.0
+- NetBenefits_Criteria_Costs_3.0_GHG_Costs_5.0
+- TotalBenefits_Criteria_Costs_3.0_GHG_Costs_3.0
+- NetBenefits_Criteria_Costs_3.0_GHG_Costs_3.0
+- TotalBenefits_Criteria_Costs_3.0_GHG_Costs_2.5
+- NetBenefits_Criteria_Costs_3.0_GHG_Costs_2.5
+- TotalBenefits_Criteria_Costs_3.0_GHG_Costs_3.0_95
+- NetBenefits_Criteria_Costs_3.0_GHG_Costs_3.0_95
+- TotalBenefits_Criteria_Costs_7.0_GHG_Costs_5.0
+- NetBenefits_Criteria_Costs_7.0_GHG_Costs_5.0
+- TotalBenefits_Criteria_Costs_7.0_GHG_Costs_3.0
+- NetBenefits_Criteria_Costs_7.0_GHG_Costs_3.0
+- TotalBenefits_Criteria_Costs_7.0_GHG_Costs_2.5
+- NetBenefits_Criteria_Costs_7.0_GHG_Costs_2.5
+- TotalBenefits_Criteria_Costs_7.0_GHG_Costs_3.0_95
+- NetBenefits_Criteria_Costs_7.0_GHG_Costs_3.0_95
+
+The base scenario is used only for the purpose of calculating the above parameters relative to a common scenario. As such, the reporting of these parameters in the tool's output files should not
+be seen as absolute valuations. Instead, these parameters are relative to the base scenario (default="202hold") which allows for calculation of incremental results relative to any scenario in the
+output files. For example, in the NPRM analysis, the no action case is comprised of CA framework OEMs meeting the framework while non-framework OEMs meet the SAFE FRM ("Framework_Safe"). The action
+case is comprised of framework OEMs meeting the framework and then meeting the proposal for 2023 and later while non-framework OEMs meet SAFE standards and then the proposal for 2023 and later
+("Fw-To-Proposal_Safe-To-Proposal"). These two scenarios should be chosen carefully from the output files to calculate any incremental costs, benefits and net benefits of the proposal relative to
+the no action case.
+
+
+Total Costs
+***********
+
+This is a new parameter that is included in the cost and cost summary reports of the tool. The Total Costs are calculated as shown in equation :math:numref:`costs`.
 
 .. math::
     :label: costs
 
-    & TotalSocialCosts
+    & TotalCosts
 
     & =\small(ForegoneConsumerSalesSurplus_{Action} - ForegoneConsumerSalesSurplus_{NoAction})
 
@@ -139,11 +212,12 @@ The total social costs are calculated as shown in equation :math:numref:`costs`
 
     & + \small(NonFatalCrashCostsNet_{Action} - NonFatalCrashCostsNet_{NoAction})
 
+where FatalityCostsNet if from equation :math:numref:`fc_net` and NonFatalCrashCostsNet is from equation :math:numref:`nfc_net`.
 
 Fuel Savings
-............
+************
 
-The fuel savings are calculated as shown in equation :math:numref:`fuel`
+This is a new parameter that is included in the cost and cost summary reports of the tool. The fuel savings are calculated as shown in equation :math:numref:`fuel`.
 
 .. math::
     :label: fuel
@@ -156,9 +230,9 @@ The fuel savings are calculated as shown in equation :math:numref:`fuel`
 
 
 Refueling Time Savings
-......................
+**********************
 
-Note that the CCEMS calculates a Refueling Time Cost which the tool tracks as a Savings rather than a cost.
+This is a parameter calculated internal to the tool only for inclusion in the NonEmissionBenefits. Note that the CCEMS calculates a Refueling Time Cost which is included in the tool's output files.
 
 .. math::
     :label: refuel
@@ -167,10 +241,11 @@ Note that the CCEMS calculates a Refueling Time Cost which the tool tracks as a 
 
     & = \small(RefuelingTimeCosts_{NoAction} - RefuelingTimeCosts_{Action})
 
-Energy Security Benefits
-........................
 
-Note that the CCEMs calculates Petroleum Market Externalities which the tool tracks as a Benefit.
+Energy Security Benefits
+************************
+
+This is a parameter calculated internal to the tool only for inclusion in the NonEmissionBenefits. Note that the CCEMs calculates Petroleum Market Externalities which is included in the tool's output files.
 
 .. math::
     :label: energy_sec
@@ -179,10 +254,11 @@ Note that the CCEMs calculates Petroleum Market Externalities which the tool tra
 
     & = \small(PetroleumMarketExternalities_{NoAction} - PetroleumMarketExternalities_{Action})
 
-Non-Emission Benefits
-......................
 
-The non-emission-related benefits are calculated as shown in equation :math:numref:`non_emission_benefits`
+Non-Emission Benefits
+*********************
+
+The non-emission-related benefits are calculated as shown in equation :math:numref:`non_emission_benefits`.
 
 .. math::
     :label: non_emission_benefits
@@ -191,34 +267,53 @@ The non-emission-related benefits are calculated as shown in equation :math:numr
 
     & = \small(DriveValue_{Action} - DriveValue_{NoAction})
 
-    & + RefuelingTimeSavings + EnergySecurityBenefits
+    & + \small(RefuelingTimeSavings + EnergySecurityBenefits)
 
+where RefuelingTimeSavings is from equation :math:numref:`refuel` and EnergySecurityBenefits is from equation :math:numref:`energy_sec`. The DriveValue is calculated internal to CCEMS.
 
-Total Social Benefits
-.....................
+Emission Benefits
+*****************
 
-The total benefits are calculated as shown in equation :math:numref:`total_benefits`
+Costs for each pollutant are calculated using the inventory for each pollutant multiplied by the appropriate benefit per ton values (for criteria pollutants) or social cost of GHG values (for GHGs).
+The Criteria_Costs and GHG_Costs shown in the above list of parameters are summations within the appropriate internal rate of return stream (that is, 2.5% valuations sum only with 2.5% values, etc.)
+While criteria pollutants upstream and tailpipe are monetized separately, the GHG pollutants are not. These costs are included in the tool's output files. The benefits for each pollutant are not
+included in the output files and are calculated internal to the tool for inclusion in the Total Benefits and Net Benefits calculations. The benefits for each pollutant and internal discount rate,
+are calculated as shown in equation :math:numref:`emission_benefits`.
+
+.. math::
+    :label: emission_benefits
+
+    & EmissionBenefit_{Pollutant;InternalDiscountRate}
+
+    & = $/ton * \small(tons_{Pollutant;InternalDiscountRate;Action} - tons_{Pollutant;InternalDiscountRate;NoAction})
+
+Total Benefits
+**************
+
+The total benefits are calculated as shown in equation :math:numref:`total_benefits`.
 
 .. math::
     :label: total_benefits
 
-    TotalSocialBenefits = NonEmissionSocialBenefits
+    & TotalBenefits
 
-                          + CriteriaEmissionBenefits
+    & = \small(NonEmissionBenefits + CriteriaEmissionBenefits + SCGHGEmissionBenefits)
 
-                          + SCGHGEmissionBenefits
+where NonEmissionBenefits is from equation :math:numref:`non_emission_benefits` and EmissionBenefits are from equation :math:numref:`emission_benefits`.
 
+Net Benefits
+************
 
-Net Social Benefits
-...................
-
-The net benefits are calculated as shown in equation :math:numref:`net_benefits`
+The net benefits are calculated as shown in equation :math:numref:`net_benefits`.
 
 .. math::
     :label: net_benefits
 
-    NetSocialBenefits = FuelSavings + TotalSocialBenefits - TotalSocialCosts
+    & NetBenefits
 
+    & = \small(FuelSavings + TotalBenefits - TotalCosts)
+
+where FuelSavings is from equation :math:numref:`fuel`, TotalBenefits is from equation :math:numref:`total_benefits` and TotalCosts is from equation :math:numref:`costs`.
 
 Discounting
 -----------
