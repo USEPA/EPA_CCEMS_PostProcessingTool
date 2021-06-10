@@ -91,7 +91,7 @@ scenario and within each scenario. The equations shown below (equations :math:nu
 - FatalityCosts_Net
 - NonFatalCrashCosts_Net
 
-The following criteria and GHG parameters are unique to the tool and are calculated consistent with CCEMS (tons * $/ton) but include more granularity and all GHG valuations simultaneously.
+The following criteria and GHG parameters are unique to the tool and are calculated consistent with CCEMS (tons * cost/ton) but include more granularity and all GHG valuations simultaneously.
 
 - PM25_Costs_tailpipe_3.0
 - PM25_Costs_upstream_3.0
@@ -285,7 +285,7 @@ are calculated as shown in equation :math:numref:`emission_benefits`.
 
     & EmissionBenefit_{Pollutant;InternalDiscountRate}
 
-    & = $/ton * \small(tons_{Pollutant;InternalDiscountRate;Action} - tons_{Pollutant;InternalDiscountRate;NoAction})
+    & = cost/ton * \small(tons_{Pollutant;InternalDiscountRate;Action} - tons_{Pollutant;InternalDiscountRate;NoAction})
 
 Total Benefits
 **************
