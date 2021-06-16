@@ -333,7 +333,7 @@ Present value
 .. math::
     :label: pv
 
-    PV=\frac{AnnualValue_{0}} {(1+rate)^{(0+offset)}}+\frac{AnnualValue_{1}} {(1+rate)^{(1+offset)}}+\frac{…} {…}+\frac{AnnualValue_{n}} {(1+rate)^{(n+offset)}}
+    PV=\frac{AnnualValue_{0}} {(1+rate)^{(0+offset)}}+\frac{AnnualValue_{1}} {(1+rate)^{(1+offset)}}+\cdots+\frac{AnnualValue_{n}} {(1+rate)^{(n+offset)}}
 
 where,
 
