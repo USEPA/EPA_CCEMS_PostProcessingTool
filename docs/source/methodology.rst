@@ -198,7 +198,7 @@ This is a new parameter that is included in the cost and cost summary reports of
 
     & TotalCosts
 
-    & =\small(ForegoneConsumerSalesSurplus_{Action} - ForegoneConsumerSalesSurplus_{NoAction})
+    & =\small(ForegoneConsumerSalesSurplus_{NoAction} - ForegoneConsumerSalesSurplus_{Action})
 
     & + \small(TechCost_{Action} - TechCost_{NoAction})
 

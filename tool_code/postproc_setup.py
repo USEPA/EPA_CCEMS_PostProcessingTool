@@ -191,12 +191,12 @@ class SetInputs:
     # lists of social costs and benefits
     retail_fuel_expenditures = 'Retail Fuel Outlay'
     fuel_tax_revenues = 'Fuel Tax Revenue'
-    social_cost_args = ['Foregone Consumer Sales Surplus',
-                        'Tech Cost',
+    social_cost_args = ['Tech Cost',
                         'Maint/Repair Cost',
                         'Congestion Costs',
                         'Noise Costs'
                         ]
+    consumer_surplus_as_cost_args = ['Foregone Consumer Sales Surplus']
 
     fatality_costs = 'Fatality Costs'
     non_fatal_crash_costs = 'Non-Fatal Crash Costs'

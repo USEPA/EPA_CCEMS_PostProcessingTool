@@ -35,13 +35,19 @@ def calc_social_impacts(settings, dict_of_values):
         fuel_savings = (base_fuel_expenditures - base_tax_revenues) - (action_fuel_expenditures - action_tax_revenues)
         delta_dict.update({'TotalFuelSavings': fuel_savings})
 
-        # calc social costs
+        # calc social costs (these use action minus base)
         for arg in settings.social_cost_args:
             base_arg_value = dict_of_values[base_key][arg]
             delta_arg = dict_of_values[key][arg] - base_arg_value
             social_costs += delta_arg
 
-        # calc fatality/non-fatal crash costs and risk values net
+        # include consumer surplus as costs (these use base minus action)
+        for arg in settings.consumer_surplus_as_cost_args:
+            base_arg_value = dict_of_values[base_key][arg]
+            delta_arg = base_arg_value - dict_of_values[key][arg]
+            social_costs += delta_arg
+
+        # calc fatality/non-fatal crash costs and risk values net (the nets use action minus base)
         base_fatality_costs = dict_of_values[base_key][settings.fatality_costs]
         base_fatality_risk_value = dict_of_values[base_key][settings.fatality_risk_value]
         base_fatality_costs_net = base_fatality_costs - base_fatality_risk_value
