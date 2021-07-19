@@ -72,6 +72,26 @@ def post_combinator_main(settings, report_df, report_name):
     return result
 
 
+def convert_to_ustons(settings, df):
+    """
+    Note:
+        CCEMS reports criteria pollutants in metric tons and converts to US tons when multiplying by $/ton. EPA prefers to report US tons.
+
+    Parameters:
+        settings: The SetInputs class.\n
+        df: A DataFrame containing inventory values in metric tons for conversion to US tons.
+
+    Returns:
+        A DataFrame with criteria pollutant inventories expressed in US tons.
+
+    """
+    args = [arg for arg in df.columns if '(t)' in arg and 'CO2' not in arg and 'CH4' not in arg and 'N2O' not in arg]
+    for arg in args:
+        df[arg] = df[arg] * settings.uston_per_metricton
+        df = df.rename(columns={arg: arg.split(' ')[0] + ' ' + arg.split(' ')[1] + ' (ustons)'})
+    return df
+
+
 if __name__ == '__main__':
     from postproc_setup import SetInputs as settings
     post_combinator_main(settings)

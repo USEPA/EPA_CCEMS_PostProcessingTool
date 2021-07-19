@@ -231,6 +231,10 @@ class SetInputs:
     kwh_us_annual = 3_802_000_000_000 # 3802 terrawatt hours electricity consumption in US in 2020
     bbl_us_annual = 2_940_000_000 # 2.94 billion BBL oil consumption in US in 2020
     year_for_compares = 2020
+    grams_per_uston = 907185
+    grams_per_metricton = 1_000_000
+    metricton_per_uston = grams_per_uston / grams_per_metricton
+    uston_per_metricton = 1 / metricton_per_uston
     
 
 if __name__ == '__main__':

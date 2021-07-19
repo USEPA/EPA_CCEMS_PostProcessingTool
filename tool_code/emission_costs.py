@@ -91,54 +91,54 @@ def calc_emission_costs(settings, df, id_cols):
         co2_5, co2_3, co2_25, co2_395, ch4_5, ch4_3, ch4_25, ch4_395, n2o_5, n2o_3, n2o_25, n2o_395 = get_scc_cost_factors(settings, calendar_year)
 
         # get tons
-        pm_tailpipe_tons = calc_dict[key]['PM Tailpipe (t)']
-        pm_upstream_tons = calc_dict[key]['PM Upstream (t)']
-        nox_tailpipe_tons = calc_dict[key]['NOx Tailpipe (t)']
-        nox_upstream_tons = calc_dict[key]['NOx Upstream (t)']
-        so2_tailpipe_tons = calc_dict[key]['SO2 Tailpipe (t)']
-        so2_upstream_tons = calc_dict[key]['SO2 Upstream (t)']
+        pm_tailpipe_ustons = calc_dict[key]['PM Tailpipe (ustons)']
+        pm_upstream_ustons = calc_dict[key]['PM Upstream (ustons)']
+        nox_tailpipe_ustons = calc_dict[key]['NOx Tailpipe (ustons)']
+        nox_upstream_ustons = calc_dict[key]['NOx Upstream (ustons)']
+        so2_tailpipe_ustons = calc_dict[key]['SO2 Tailpipe (ustons)']
+        so2_upstream_ustons = calc_dict[key]['SO2 Upstream (ustons)']
 
         co2_mmt = calc_dict[key]['CO2 Total (mmt)']
         ch4_tons = calc_dict[key]['CH4 Total (t)']
         n2o_tons = calc_dict[key]['N2O Total (t)']
 
         # multiply $/ton by tons and divide by 1000 to express in thousands as per the CAFE model convention; co2_mmt is multiplied by 10^6 to convert to tons
-        update_dict = {'PM25_Costs_tailpipe_3.0': pm_tailpipe_3 * pm_tailpipe_tons / 1000,
-                       'PM25_Costs_upstream_3.0': pm_upstream_3 * pm_upstream_tons / 1000,
-                       'NOx_Costs_tailpipe_3.0': nox_tailpipe_3 * nox_tailpipe_tons / 1000,
-                       'NOx_Costs_upstream_3.0': nox_upstream_3 * nox_upstream_tons / 1000,
-                       'SO2_Costs_tailpipe_3.0': so2_tailpipe_3 * so2_tailpipe_tons / 1000,
-                       'SO2_Costs_upstream_3.0': so2_upstream_3 * so2_upstream_tons / 1000,
-                       'PM25_Costs_tailpipe_7.0': pm_tailpipe_7 * pm_tailpipe_tons / 1000,
-                       'PM25_Costs_upstream_7.0': pm_upstream_7 * pm_upstream_tons / 1000,
-                       'NOx_Costs_tailpipe_7.0': nox_tailpipe_7 * nox_tailpipe_tons / 1000,
-                       'NOx_Costs_upstream_7.0': nox_upstream_7 * nox_upstream_tons / 1000,
-                       'SO2_Costs_tailpipe_7.0': so2_tailpipe_7 * so2_tailpipe_tons / 1000,
-                       'SO2_Costs_upstream_7.0': so2_upstream_7 * so2_upstream_tons / 1000,
-                       'Criteria_Costs_tailpipe_3.0': pm_tailpipe_3 * pm_tailpipe_tons / 1000
-                                                      + nox_tailpipe_3 * nox_tailpipe_tons / 1000
-                                                      + so2_tailpipe_3 * so2_tailpipe_tons / 1000,
-                       'Criteria_Costs_upstream_3.0': pm_upstream_3 * pm_upstream_tons / 1000
-                                                      + nox_upstream_3 * nox_upstream_tons / 1000
-                                                      + so2_upstream_3 * so2_upstream_tons / 1000,
-                       'Criteria_Costs_tailpipe_7.0': pm_tailpipe_7 * pm_tailpipe_tons / 1000
-                                                      + nox_tailpipe_7 * nox_tailpipe_tons / 1000
-                                                      + so2_tailpipe_7 * so2_tailpipe_tons / 1000,
-                       'Criteria_Costs_upstream_7.0': pm_upstream_7 * pm_upstream_tons / 1000
-                                                      + nox_upstream_7 * nox_upstream_tons / 1000
-                                                      + so2_upstream_7 * so2_upstream_tons / 1000,
-                       'Criteria_Costs_3.0': pm_tailpipe_3 * pm_tailpipe_tons / 1000
-                                             + nox_tailpipe_3 * nox_tailpipe_tons / 1000
-                                             + so2_tailpipe_3 * so2_tailpipe_tons / 1000
-                                             + pm_upstream_3 * pm_upstream_tons / 1000
-                                             + nox_upstream_3 * nox_upstream_tons / 1000
-                                             + so2_upstream_3 * so2_upstream_tons / 1000,
-                       'Criteria_Costs_7.0': pm_tailpipe_7 * pm_tailpipe_tons / 1000
-                                             + nox_tailpipe_7 * nox_tailpipe_tons / 1000
-                                             + so2_tailpipe_7 * so2_tailpipe_tons / 1000
-                                             + pm_upstream_7 * pm_upstream_tons / 1000
-                                             + nox_upstream_7 * nox_upstream_tons / 1000
-                                             + so2_upstream_7 * so2_upstream_tons / 1000,
+        update_dict = {'PM25_Costs_tailpipe_3.0': pm_tailpipe_3 * pm_tailpipe_ustons / 1000,
+                       'PM25_Costs_upstream_3.0': pm_upstream_3 * pm_upstream_ustons / 1000,
+                       'NOx_Costs_tailpipe_3.0': nox_tailpipe_3 * nox_tailpipe_ustons / 1000,
+                       'NOx_Costs_upstream_3.0': nox_upstream_3 * nox_upstream_ustons / 1000,
+                       'SO2_Costs_tailpipe_3.0': so2_tailpipe_3 * so2_tailpipe_ustons / 1000,
+                       'SO2_Costs_upstream_3.0': so2_upstream_3 * so2_upstream_ustons / 1000,
+                       'PM25_Costs_tailpipe_7.0': pm_tailpipe_7 * pm_tailpipe_ustons / 1000,
+                       'PM25_Costs_upstream_7.0': pm_upstream_7 * pm_upstream_ustons / 1000,
+                       'NOx_Costs_tailpipe_7.0': nox_tailpipe_7 * nox_tailpipe_ustons / 1000,
+                       'NOx_Costs_upstream_7.0': nox_upstream_7 * nox_upstream_ustons / 1000,
+                       'SO2_Costs_tailpipe_7.0': so2_tailpipe_7 * so2_tailpipe_ustons / 1000,
+                       'SO2_Costs_upstream_7.0': so2_upstream_7 * so2_upstream_ustons / 1000,
+                       'Criteria_Costs_tailpipe_3.0': pm_tailpipe_3 * pm_tailpipe_ustons / 1000
+                                                      + nox_tailpipe_3 * nox_tailpipe_ustons / 1000
+                                                      + so2_tailpipe_3 * so2_tailpipe_ustons / 1000,
+                       'Criteria_Costs_upstream_3.0': pm_upstream_3 * pm_upstream_ustons / 1000
+                                                      + nox_upstream_3 * nox_upstream_ustons / 1000
+                                                      + so2_upstream_3 * so2_upstream_ustons / 1000,
+                       'Criteria_Costs_tailpipe_7.0': pm_tailpipe_7 * pm_tailpipe_ustons / 1000
+                                                      + nox_tailpipe_7 * nox_tailpipe_ustons / 1000
+                                                      + so2_tailpipe_7 * so2_tailpipe_ustons / 1000,
+                       'Criteria_Costs_upstream_7.0': pm_upstream_7 * pm_upstream_ustons / 1000
+                                                      + nox_upstream_7 * nox_upstream_ustons / 1000
+                                                      + so2_upstream_7 * so2_upstream_ustons / 1000,
+                       'Criteria_Costs_3.0': pm_tailpipe_3 * pm_tailpipe_ustons / 1000
+                                             + nox_tailpipe_3 * nox_tailpipe_ustons / 1000
+                                             + so2_tailpipe_3 * so2_tailpipe_ustons / 1000
+                                             + pm_upstream_3 * pm_upstream_ustons / 1000
+                                             + nox_upstream_3 * nox_upstream_ustons / 1000
+                                             + so2_upstream_3 * so2_upstream_ustons / 1000,
+                       'Criteria_Costs_7.0': pm_tailpipe_7 * pm_tailpipe_ustons / 1000
+                                             + nox_tailpipe_7 * nox_tailpipe_ustons / 1000
+                                             + so2_tailpipe_7 * so2_tailpipe_ustons / 1000
+                                             + pm_upstream_7 * pm_upstream_ustons / 1000
+                                             + nox_upstream_7 * nox_upstream_ustons / 1000
+                                             + so2_upstream_7 * so2_upstream_ustons / 1000,
                        'CO2_Costs_5.0': co2_5 * co2_mmt * 1000000 / 1000,
                        'CO2_Costs_3.0': co2_3 * co2_mmt * 1000000 / 1000,
                        'CO2_Costs_2.5': co2_25 * co2_mmt * 1000000 / 1000,

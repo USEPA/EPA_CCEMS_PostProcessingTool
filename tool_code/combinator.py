@@ -2,7 +2,7 @@ import pandas as pd
 from time import time
 import shutil
 import tool_code
-from tool_code.post_combinator import post_combinator_main
+from tool_code.post_combinator import post_combinator_main, convert_to_ustons
 from tool_code.copy_paster import copy_paster
 from tool_code.combinator_functions import read_and_combine_files, read_files_and_combine_scenarios
 from tool_code.report_classes import ComplianceReport, CostsReport, EffectsReport, TechReport
@@ -41,9 +41,10 @@ def main(settings):
         combined_effects_summary_report = combined_effects_summary_report.reset_index(drop=True)
         combined_effects_summary_report = EffectsReport(combined_effects_summary_report).new_report(settings)
         combined_effects_summary_report = post_combinator_main(settings, combined_effects_summary_report, settings.effects_summary_report_name)
+        combined_effects_summary_report = convert_to_ustons(settings, combined_effects_summary_report)
         # create df of CAP and GHG inventories for recalc of damages
         inventory_summary_id_cols = ['Scenario Name', 'Calendar Year', 'Reg-Class']
-        cols = inventory_summary_id_cols + [col for col in combined_effects_summary_report.columns if '(t)' in col or '(mmt)' in col]
+        cols = inventory_summary_id_cols + [col for col in combined_effects_summary_report.columns if '(t)' in col or '(mmt)' in col or '(ustons)' in col]
         inventory_summary = pd.DataFrame(combined_effects_summary_report.loc[combined_effects_summary_report['Fuel Type'] == 'TOTAL', :],
                                          columns=cols).reset_index(drop=True)
         # calc new fatality metrics
@@ -59,9 +60,10 @@ def main(settings):
         combined_effects_report = combined_effects_report.reset_index(drop=True)
         combined_effects_report = EffectsReport(combined_effects_report).new_report(settings)
         combined_effects_report = post_combinator_main(settings, combined_effects_report, settings.effects_report_name)
+        combined_effects_report = convert_to_ustons(settings, combined_effects_report)
         # create df of CAP and GHG inventories for recalc of damages
         inventory_id_cols = ['Scenario Name', 'Model Year', 'Age', 'Calendar Year', 'Reg-Class']
-        cols = inventory_id_cols + [col for col in combined_effects_report.columns if '(t)' in col or '(mmt)' in col]
+        cols = inventory_id_cols + [col for col in combined_effects_report.columns if '(t)' in col or '(mmt)' in col or '(ustons)' in col]
         inventory = pd.DataFrame(combined_effects_report.loc[combined_effects_report['Fuel Type'] == 'TOTAL', :], columns=cols).reset_index(drop=True)
         # calc new fatality metrics
         combined_effects_report = calc_new_fatality_metrics(combined_effects_report)
