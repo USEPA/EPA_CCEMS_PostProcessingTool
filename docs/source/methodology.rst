@@ -278,7 +278,7 @@ Costs for each pollutant are calculated using the inventory for each pollutant m
 The Criteria_Costs and GHG_Costs shown in the above list of parameters are summations within the appropriate internal rate of return stream (that is, 2.5% valuations sum only with 2.5% values, etc.)
 While criteria pollutants upstream and tailpipe are monetized separately, the GHG pollutants are not. These costs are included in the tool's output files. The benefits for each pollutant are not
 included in the output files and are calculated internal to the tool for inclusion in the Total Benefits and Net Benefits calculations. The benefits for each pollutant and internal discount rate,
-are calculated as shown in equation :math:numref:`emission_benefits`.
+are calculated as shown in equation :math:numref:`emission_benefits`. Note that the tool converts criteria air pollutant metric tons (CCEMS default) to US tons.
 
 .. math::
     :label: emission_benefits
