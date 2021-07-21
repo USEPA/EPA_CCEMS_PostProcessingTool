@@ -6,8 +6,8 @@ def discount_values(settings, df, id_cols, discount_rates, *non_emission_cost_ar
     """
     Note:
         The discount function discounts non-emission args at the social discount rates entered in the SetInputs class and discounts
-        emission args at their internal rate of return ONLY. Results are reported according ot the social discount rates, but emission
-        args are always discounted at their internal rate of return. Values are discounted to a given year and assume costs start at the beginning
+        emission args at their internally consistent discount rate ONLY. Results are reported according ot the social discount rates, but emission
+        args are always discounted at their internally consistent discount rate. Values are discounted to a given year and assume costs start at the beginning
         or end of that year.\n
         The passed dictionary keys should consist of:\n
             (scenario_name, year, reg_class, discount_rate) or (scenario_name, model_year, age, calendar_year, reg_class, discount_rate)\n

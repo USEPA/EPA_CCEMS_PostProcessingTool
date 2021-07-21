@@ -181,9 +181,9 @@ The current setting is "2020hold" and, as such, the following parameters are all
 - NetBenefits_Criteria_Costs_7.0_GHG_Costs_3.0_95
 
 The base scenario is used only for the purpose of calculating the above parameters relative to a common scenario. As such, the reporting of these parameters in the tool's output files should not
-be seen as absolute valuations. Instead, these parameters are relative to the base scenario (default="202hold") which allows for calculation of incremental results relative to any scenario in the
-output files. For example, in the NPRM analysis, the no action case is comprised of CA framework OEMs meeting the framework while non-framework OEMs meet the SAFE FRM ("Framework_Safe"). The action
-case is comprised of framework OEMs meeting the framework and then meeting the proposal for 2023 and later while non-framework OEMs meet SAFE standards and then the proposal for 2023 and later
+be seen as absolute valuations. Instead, these parameters are relative to the base scenario (default="2020hold") which allows for calculation of incremental results relative to any scenario in the
+output files. For example, in the NPRM analysis, the No Action scenario is comprised of CA framework OEMs meeting the framework while non-framework OEMs meet the SAFE FRM ("Framework_Safe"). The action
+scenario is comprised of framework OEMs meeting the framework and then meeting the proposal for 2023 and later while non-framework OEMs meet SAFE standards and then the proposal for 2023 and later
 ("Fw-To-Proposal_Safe-To-Proposal"). These two scenarios should be chosen carefully from the output files to calculate any incremental costs, benefits and net benefits of the proposal relative to
 the no action case.
 
@@ -275,17 +275,17 @@ Emission Benefits
 *****************
 
 Costs for each pollutant are calculated using the inventory for each pollutant multiplied by the appropriate benefit per ton values (for criteria pollutants) or social cost of GHG values (for GHGs).
-The Criteria_Costs and GHG_Costs shown in the above list of parameters are summations within the appropriate internal rate of return stream (that is, 2.5% valuations sum only with 2.5% values, etc.)
+The Criteria_Costs and GHG_Costs shown in the above list of parameters are summations within the appropriate discount rate stream (that is, 2.5% valuations sum only with 2.5% values, etc.)
 While criteria pollutants upstream and tailpipe are monetized separately, the GHG pollutants are not. These costs are included in the tool's output files. The benefits for each pollutant are not
-included in the output files and are calculated internal to the tool for inclusion in the Total Benefits and Net Benefits calculations. The benefits for each pollutant and internal discount rate,
-are calculated as shown in equation :math:numref:`emission_benefits`. Note that the tool converts criteria air pollutant metric tons (CCEMS default) to US tons.
+included in the output files and are calculated internal to the tool for inclusion in the Total Benefits and Net Benefits calculations. The benefits for each pollutant, and applicable discount rate,
+are calculated as shown in equation :math:numref:`emission_benefits`. Note that the tool converts criteria air pollutant metric tons (CCEMS default) to US tons and presents US tons in the output files.
 
 .. math::
     :label: emission_benefits
 
     & EmissionBenefit_{Pollutant;InternalDiscountRate}
 
-    & = cost/ton * \small(tons_{Pollutant;InternalDiscountRate;Action} - tons_{Pollutant;InternalDiscountRate;NoAction})
+    & = cost/ton * \small(tons_{Pollutant;ApplicableDiscountRate;Action} - tons_{Pollutant;ApplicableDiscountRate;NoAction})
 
 Total Benefits
 **************
@@ -322,7 +322,7 @@ Monetized values are discounted at the social discount rates entered in the SetI
 in the SetInputs class. The default value is 2021. Monetized values are discounted assuming costs occur at the beginning of the year or the end of the year as entered in
 the SetInputs class. The default value is "end-year", meaning that any monetized values in 2021 are discounted.
 
-Importantly, all emission-related monetized values are discounted at their internal rates of return, regardless of the social discount rate. The internal rate of return
+Importantly, all emission-related monetized values are discounted at their internally consistent discount rates, regardless of the social discount rate. The internally consistent discount rate
 is indicated in the cost-factor input files (cost_factors-criteria.csv and cost_factors-scc.csv) in the heading (e.g., values using the "co2_global_5.0_USD_per_metricton"
 cost factor will always be discounted at 5%, regardless of the social discount rate).
 
