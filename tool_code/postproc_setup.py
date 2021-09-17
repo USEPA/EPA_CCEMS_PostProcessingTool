@@ -32,7 +32,8 @@ class SetInputs:
     run_effects_report = True
     run_tech_utilization_report = True
     run_full_fleet_runs = True # this now includes safe, 2012frm, full fleet FW
-    run_model_years = [year for year in range(2017, 2030)] # only used for the model year lifetime reports
+    run_model_years = [year for year in range(2020, 2030)] # only used for the model year lifetime reports
+    summary_start_year = 2020
 
     base_scenario_name = '1 Mpg Standards'
     base_social_name = '2020hold'
@@ -45,24 +46,83 @@ class SetInputs:
     # primary runs
     if run_primary_runs:
         model_runs = ['Run0_SAFE_2012FRM',
-                      'Run1_FW27',
-                      'Run2_SAFE-to-Alts',
-                      'Run3_FW-OEMs_FW-to-Proposal',
-                      'Run4_NonFW-OEMs_SAFE-to-Proposal',
-                      'Run5_FW-OEMs_FW-to-Alt1',
-                      'Run6_NonFW-OEMs_SAFE-to-Alt1',
-                      'Run7_FW-OEMs_FW-to-Alt2',
-                      'Run8_NonFW-OEMs_SAFE-to-Alt2',
-                      'Run9_FW-OEMs_FW',
-                      'Run10_NonFW-OEMs_SAFE',
+                      'FOS_FW-OEMs_P_oc15_mult',
+                      'FOS_NFW-OEMs_P_oc15_mult',
+                      'FOS_FW-OEMs_NA',
+                      'FOS_NFW-OEMs_NA',
+                      'FW-OEMs_P_oc15_mult_YearShift',
+                      'NFW-OEMs_P_oc15_mult_YearShift',
+                      'FW-OEMs_NA_YearShift',
+                      'NFW-OEMs_NA_YearShift',
                       ]
-        model_runs_to_combine = {}
-        model_runs_of_full_fleet = [model_runs[0], model_runs[1], model_runs[2]]
-        model_runs_with_scenarios_to_combine = {'FWandSAFE-to-Proposal': [model_runs[3], model_runs[4]],
-                                                'FWandSAFE-to-Alt1': [model_runs[5], model_runs[6]],
-                                                'FWandSAFE-to-Alt2': [model_runs[7], model_runs[8]],
-                                                'FWandSAFE': [model_runs[9], model_runs[10]],
+        # model_runs = ['Run0_Combined',
+        #               'Run50_FW-OEMs_SAFE_HH-Pop',
+        #               'Run51_NonFW-OEMs_SAFE_HH-Pop',
+        #               'Run60_FW-OEMs_SAFE_HH-HistVMT',
+        #               'Run61_NonFW-OEMs_SAFE_HH-HistVMT',
+        #               'Run70_FW-OEMs_SAFE_HH-HistFleet',
+        #               'Run71_NonFW-OEMs_SAFE_HH-HistFleet',
+        #               'Run80_FW-OEMs_SAFE_Pop-HistVMT',
+        #               'Run81_NonFW-OEMs_SAFE_Pop-HistVMT',
+        #               'Run90_FW-OEMs_SAFE_Pop-HistFleet',
+        #               'Run91_NonFW-OEMs_SAFE_Pop-HistFleet',
+        #               'Run100_FW-OEMs_SAFE_HistVMT-HistFleet',
+        #               'Run101_NonFW-OEMs_SAFE_HistVMT-HistFleet',
+        #               'Run110_FW-OEMs_SAFE_HH-Pop-HistVMT',
+        #               'Run111_NonFW-OEMs_SAFE_HH-Pop-HistVMT',
+        #               'Run120_FW-OEMs_SAFE_HH-Pop-HistFleet',
+        #               'Run121_NonFW-OEMs_SAFE_HH-Pop-HistFleet',
+        #               'Run130_FW-OEMs_SAFE_HH-HistVMT-HistFleet',
+        #               'Run131_NonFW-OEMs_SAFE_HH-HistVMT-HistFleet',
+        #               'Run140_FW-OEMs_SAFE_Pop-HistVMT-HistFleet',
+        #               'Run141_NonFW-OEMs_SAFE_Pop-HistVMT-HistFleet',
+        #               'Run150_FW-OEMs_SAFE_HH-Pop-HistVMT-HistFleet',
+        #               'Run151_NonFW-OEMs_SAFE_HH-Pop-HistVMT-HistFleet',
+        #               'Run160_FW-OEMs_SAFE_HH-PopV2-HistVMT-HistFleet',
+        #               'Run161_NonFW-OEMs_SAFE_HH-PopV2-HistVMT-HistFleet',
+        #               'Run170_FW-OEMs_SAFE_HH-PopV3-HistVMT-HistFleet',
+        #               'Run171_NonFW-OEMs_SAFE_HH-PopV3-HistVMT-HistFleet',
+        #               ]
+        # model_runs = ['Run0_Combined',
+        #               'Run3_FW-OEMs_FW-to-Proposal',
+        #               'Run4_NonFW-OEMs_SAFE-to-Proposal',
+        #               'Run9_FW-OEMs_FW',
+        #               'Run10_NonFW-OEMs_SAFE',
+        #               ]
+        # model_runs = ['Run0_SAFE_2012FRM',
+        #               'Run1_FW27',
+        #               'Run2_SAFE-to-Alts',
+        #               'Run3_FW-OEMs_FW-to-Proposal',
+        #               'Run4_NonFW-OEMs_SAFE-to-Proposal',
+        #               'Run5_FW-OEMs_FW-to-Alt1',
+        #               'Run6_NonFW-OEMs_SAFE-to-Alt1',
+        #               'Run7_FW-OEMs_FW-to-Alt2',
+        #               'Run8_NonFW-OEMs_SAFE-to-Alt2',
+        #               'Run9_FW-OEMs_FW',
+        #               'Run10_NonFW-OEMs_SAFE',
+        #               ]
+        model_runs_to_combine = None
+        model_runs_of_full_fleet = [model_runs[0]]
+        # the 3rd entry in each of the dict values is for year_shift, if needed
+        model_runs_with_scenarios_to_combine = {'proposal': [model_runs[1], model_runs[2], None],
+                                                'no-action': [model_runs[3], model_runs[4], None],
+                                                'proposal_year-shift': [model_runs[5], model_runs[6], 3],
+                                                'no-action_year-shift': [model_runs[7], model_runs[8], 3],
                                                 }
+        # model_runs_with_scenarios_to_combine = {'hh-pop': [model_runs[1], model_runs[2]],
+        #                                         'hh-vmt': [model_runs[3], model_runs[4]],
+        #                                         'hh-fleet': [model_runs[5], model_runs[6]],
+        #                                         'pop-vmt': [model_runs[7], model_runs[8]],
+        #                                         'pop-fleet': [model_runs[9], model_runs[10]],
+        #                                         'vmt-fleet': [model_runs[11], model_runs[12]],
+        #                                         'hh-pop-vmt': [model_runs[13], model_runs[14]],
+        #                                         'hh-pop-fleet': [model_runs[15], model_runs[16]],
+        #                                         'hh-vmt-fleet': [model_runs[17], model_runs[18]],
+        #                                         'pop-vmt-fleet': [model_runs[19], model_runs[20]],
+        #                                         'hh-pop-vmt-fleet': [model_runs[21], model_runs[22]],
+        #                                         'hh-popV2-vmt-fleet': [model_runs[23], model_runs[24]],
+        #                                         'hh-popV3-vmt-fleet': [model_runs[25], model_runs[26]],
+        #                                         }
 
     # runs for sensitivities
     else:
@@ -149,30 +209,35 @@ class SetInputs:
     # create generator of files in path_code
     files_in_path_code = (entry for entry in path_code.iterdir() if entry.is_file())
 
-    path_no_combine = dict()
-    for item, run in enumerate(model_runs_of_full_fleet):
-        if run_primary_runs:
-            path_no_combine[item] = path_project / f'CAFE_model_runs/output/{model_runs_of_full_fleet[item]}/reports-csv'
-        else:
-            path_no_combine[item] = path_project / f'CAFE_model_runs/sensitivities/output/{model_runs_of_full_fleet[item]}/reports-csv'
+    if model_runs_of_full_fleet:
+        path_no_combine = dict()
+        for item, run in enumerate(model_runs_of_full_fleet):
+            if run_primary_runs:
+                # path_no_combine[item] = path_project / f'CAFE_model_runs_v2021/output/{model_runs_of_full_fleet[item]}/reports-csv'
+                path_no_combine[item] = path_project / f'CAFE_model_runs/output/{model_runs_of_full_fleet[item]}/reports-csv'
+            else:
+                path_no_combine[item] = path_project / f'CAFE_model_runs/sensitivities/output/{model_runs_of_full_fleet[item]}/reports-csv'
 
-    model_runs_to_combine_path_dict = dict()
-    for k, v in model_runs_to_combine.items():
-        if run_primary_runs:
-            model_runs_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/output/{v[0]}/reports-csv'),
-                                                  Path(path_project / f'CAFE_model_runs/output/{v[1]}/reports-csv')]
-        else:
-            model_runs_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[0]}/reports-csv'),
-                                                  Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[1]}/reports-csv')]
+    if model_runs_to_combine:
+        model_runs_to_combine_path_dict = dict()
+        for k, v in model_runs_to_combine.items():
+            if run_primary_runs:
+                model_runs_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/output/{v[0]}/reports-csv'),
+                                                      Path(path_project / f'CAFE_model_runs/output/{v[1]}/reports-csv')]
+            else:
+                model_runs_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[0]}/reports-csv'),
+                                                      Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[1]}/reports-csv')]
 
-    model_runs_with_scenarios_to_combine_path_dict = dict()
-    for k, v in model_runs_with_scenarios_to_combine.items():
-        if run_primary_runs:
-            model_runs_with_scenarios_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/output/{v[0]}/reports-csv'),
-                                                                 Path(path_project / f'CAFE_model_runs/output/{v[1]}/reports-csv')]
-        else:
-            model_runs_with_scenarios_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[0]}/reports-csv'),
-                                                                 Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[1]}/reports-csv')]
+    if model_runs_with_scenarios_to_combine:
+        model_runs_with_scenarios_to_combine_path_dict = dict()
+        for k, v in model_runs_with_scenarios_to_combine.items():
+            if run_primary_runs:
+                model_runs_with_scenarios_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/output/{v[0]}/reports-csv'),
+                                                                     Path(path_project / f'CAFE_model_runs/output/{v[1]}/reports-csv'),
+                                                                     v[2]]
+            else:
+                model_runs_with_scenarios_to_combine_path_dict[k] = [Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[0]}/reports-csv'),
+                                                                     Path(path_project / f'CAFE_model_runs/sensitivities/output/{v[1]}/reports-csv')]
 
     # set report names to read and combine
     compliance_report_name = 'compliance_report'
@@ -211,12 +276,15 @@ class SetInputs:
     consumer_surplus_as_cost_args = ['Foregone Consumer Sales Surplus']
 
     fatality_costs = 'Fatality Costs'
+    non_fatal_injury_costs = 'Non-Fatal Injury Costs'
+    # property_damage_crash_costs = 'Property Damage Crash Costs'
     non_fatal_crash_costs = 'Non-Fatal Crash Costs'
 
     drive_value = 'Drive Value'
     refueling_time_cost = 'Refueling Time Cost'
     fatality_risk_value = 'Fatality Risk Value'
     non_fatal_crash_risk_value = 'Non-Fatal Crash Risk Value'
+    # non_fatal_crash_risk_value = 'Non-Fatal Risk Value'
     petrol_market_externalities = 'Petroleum Market Externalities'
     social_criteria_benefit_args = ['Criteria_Costs_3.0', 'Criteria_Costs_7.0']
     social_scc_benefit_args = ['GHG_Costs_5.0', 'GHG_Costs_3.0', 'GHG_Costs_2.5', 'GHG_Costs_3.0_95']

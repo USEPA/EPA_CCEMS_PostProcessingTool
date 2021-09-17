@@ -59,12 +59,18 @@ def calc_social_impacts(settings, dict_of_values):
         delta_fatality_costs_net = this_fatality_costs_net - base_fatality_costs_net
 
         base_nonfatal_crash_costs = dict_of_values[base_key][settings.non_fatal_crash_costs]
+        # base_nonfatal_injury_costs = dict_of_values[base_key][settings.non_fatal_injury_costs]
+        # base_property_damage_crash_costs = dict_of_values[base_key][settings.property_damage_crash_costs]
         base_nonfatal_crash_risk_value = dict_of_values[base_key][settings.non_fatal_crash_risk_value]
         base_nonfatal_crash_costs_net = base_nonfatal_crash_costs - base_nonfatal_crash_risk_value
+        # base_nonfatal_crash_costs_net = base_nonfatal_injury_costs + base_property_damage_crash_costs - base_nonfatal_crash_risk_value
 
         this_nonfatal_crash_costs = dict_of_values[key][settings.non_fatal_crash_costs]
+        # this_nonfatal_injury_costs = dict_of_values[key][settings.non_fatal_injury_costs]
+        # this_property_damage_crash_costs = dict_of_values[key][settings.property_damage_crash_costs]
         this_nonfatal_crash_risk_value = dict_of_values[key][settings.non_fatal_crash_risk_value]
         this_nonfatal_crash_costs_net = this_nonfatal_crash_costs - this_nonfatal_crash_risk_value
+        # this_nonfatal_crash_costs_net = this_nonfatal_injury_costs + this_property_damage_crash_costs - this_nonfatal_crash_risk_value
 
         delta_nonfatal_crash_costs_net = this_nonfatal_crash_costs_net - base_nonfatal_crash_costs_net
 

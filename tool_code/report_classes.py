@@ -18,6 +18,7 @@ class ComplianceReport:
 
         # eliminate some total rows since those need re-calc (drop model year total row because .... what is it anyway?)
         df = pd.DataFrame(df.loc[df['Model Year'] != 'TOTAL', :])
+        df = pd.DataFrame(df.loc[df['Model Year'] >= settings.summary_start_year, :])
         df = pd.DataFrame(df.loc[df['Manufacturer'] != 'TOTAL', :])
         df['Model Year'] = df['Model Year'].astype(int)
 
@@ -93,6 +94,8 @@ class CostsReport:
 
         # eliminate total rows since those need re-calc
         df = pd.DataFrame(df.loc[df['Reg-Class'] != 'TOTAL', :]).reset_index(drop=True)
+        if id_args.__contains__('Calendar Year'):
+            df = pd.DataFrame(df.loc[df['Calendar Year'] >= settings.summary_start_year, :])
 
         # limit full report to desired model years
         if id_args.__contains__('Model Year'):
@@ -102,7 +105,8 @@ class CostsReport:
         # eliminate damage data since those are calculated in this tool
         exclude_cols = list()
         for arg in settings.costs_metrics_to_exclude:
-            arg_list = [col for col in df.columns if arg in col]
+            # arg_list = [col for col in df.columns if arg in col]
+            arg_list = [col for col in df.columns if arg in col and 'Property' not in col]
             exclude_cols = exclude_cols + arg_list
         df.drop(columns=exclude_cols, inplace=True)
 
@@ -150,6 +154,8 @@ class EffectsReport:
         # eliminate total rows since those need re-calc
         df = pd.DataFrame(df.loc[df['Reg-Class'] != 'TOTAL', :]).reset_index(drop=True)
         df = pd.DataFrame(df.loc[df['Fuel Type'] != 'TOTAL', :]).reset_index(drop=True)
+        if id_args.__contains__('Calendar Year'):
+            df = pd.DataFrame(df.loc[df['Calendar Year'] >= settings.summary_start_year, :])
 
         # limit full report to desired model years
         if id_args.__contains__('Model Year'):
@@ -205,7 +211,7 @@ class TechReport:
     """
     report_df = attr.ib()
 
-    def new_report(self, sales_df):
+    def new_report(self, settings, sales_df):
         df = self.report_df.copy()
         id_args = ['Scenario Name', 'Model Year']
         param_type_loc = df.columns.get_loc('Param Type')
@@ -214,6 +220,7 @@ class TechReport:
         # eliminate total rows that need re-calc and eliminate domestic/import rows since not needed
         df = pd.DataFrame(df.loc[df['Manufacturer'] != 'TOTAL', :]).reset_index(drop=True)
         df = pd.DataFrame(df.loc[(df['Reg-Class'] == 'Passenger Car') | (df['Reg-Class'] == 'Light Truck') | (df['Reg-Class'] == 'TOTAL'), :]).reset_index(drop=True)
+        df = pd.DataFrame(df.loc[df['Model Year'] >= settings.summary_start_year, :])
 
         # get sales from compliance report
         df = df.merge(sales_df, on=id_args + ['Manufacturer', 'Reg-Class'], how='left')

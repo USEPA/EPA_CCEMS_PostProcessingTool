@@ -25,21 +25,29 @@ def main(settings):
     """
     if settings.run_compliance_report:
         print('Working on compliance reports')
-        combined_compliance_report = read_and_combine_files(settings, settings.compliance_report_name)
-        combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.compliance_report_name)
-        combined_compliance_report = pd.concat([combined_compliance_report, combined_scenarios_report], axis=0, ignore_index=True)
+        combined_compliance_report = pd.DataFrame()
+        if settings.model_runs_to_combine:
+            combined_compliance_report = read_and_combine_files(settings, settings.compliance_report_name)
+        if settings.model_runs_with_scenarios_to_combine:
+            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.compliance_report_name)
+            combined_compliance_report = pd.concat([combined_compliance_report, combined_scenarios_report], axis=0, ignore_index=True)
         combined_compliance_report = combined_compliance_report.reset_index(drop=True)
-        combined_compliance_report = ComplianceReport(combined_compliance_report).new_report(settings)
+        if settings.model_runs_to_combine or settings.model_runs_with_scenarios_to_combine:
+            combined_compliance_report = ComplianceReport(combined_compliance_report).new_report(settings)
         combined_compliance_report = post_combinator_main(settings, combined_compliance_report, settings.compliance_report_name)
         combined_compliance_report.to_csv(settings.path_postproc_runs_runid_outputs / f'{settings.compliance_report_name}_{settings.filename_id}.csv', index=False)
 
     if settings.run_effects_summary_report:
         print('Working on effects summary reports')
-        combined_effects_summary_report = read_and_combine_files(settings, settings.effects_summary_report_name)
-        combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.effects_summary_report_name)
-        combined_effects_summary_report = pd.concat([combined_effects_summary_report, combined_scenarios_report], axis=0, ignore_index=True)
+        combined_effects_summary_report = pd.DataFrame()
+        if settings.model_runs_to_combine:
+            combined_effects_summary_report = read_and_combine_files(settings, settings.effects_summary_report_name)
+        if settings.model_runs_with_scenarios_to_combine:
+            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.effects_summary_report_name)
+            combined_effects_summary_report = pd.concat([combined_effects_summary_report, combined_scenarios_report], axis=0, ignore_index=True)
         combined_effects_summary_report = combined_effects_summary_report.reset_index(drop=True)
-        combined_effects_summary_report = EffectsReport(combined_effects_summary_report).new_report(settings)
+        if settings.model_runs_to_combine or settings.model_runs_with_scenarios_to_combine:
+            combined_effects_summary_report = EffectsReport(combined_effects_summary_report).new_report(settings)
         combined_effects_summary_report = post_combinator_main(settings, combined_effects_summary_report, settings.effects_summary_report_name)
         combined_effects_summary_report = convert_to_ustons(settings, combined_effects_summary_report)
         # create df of CAP and GHG inventories for recalc of damages
@@ -54,11 +62,15 @@ def main(settings):
 
     if settings.run_effects_report:
         print('Working on effects reports')
-        combined_effects_report = read_and_combine_files(settings, settings.effects_report_name)
-        combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.effects_report_name)
-        combined_effects_report = pd.concat([combined_effects_report, combined_scenarios_report], axis=0, ignore_index=True)
+        combined_effects_report = pd.DataFrame()
+        if settings.model_runs_to_combine:
+            combined_effects_report = read_and_combine_files(settings, settings.effects_report_name)
+        if settings.model_runs_with_scenarios_to_combine:
+            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.effects_report_name)
+            combined_effects_report = pd.concat([combined_effects_report, combined_scenarios_report], axis=0, ignore_index=True)
         combined_effects_report = combined_effects_report.reset_index(drop=True)
-        combined_effects_report = EffectsReport(combined_effects_report).new_report(settings)
+        if settings.model_runs_to_combine or settings.model_runs_with_scenarios_to_combine:
+            combined_effects_report = EffectsReport(combined_effects_report).new_report(settings)
         combined_effects_report = post_combinator_main(settings, combined_effects_report, settings.effects_report_name)
         combined_effects_report = convert_to_ustons(settings, combined_effects_report)
         # create df of CAP and GHG inventories for recalc of damages
@@ -71,11 +83,15 @@ def main(settings):
 
     if settings.run_costs_summary_report:
         print('Working on costs summary reports')
-        combined_costs_summary_report = read_and_combine_files(settings, settings.costs_summary_report_name)
-        combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.costs_summary_report_name)
-        combined_costs_summary_report = pd.concat([combined_costs_summary_report, combined_scenarios_report], axis=0, ignore_index=True)
+        combined_costs_summary_report = pd.DataFrame()
+        if settings.model_runs_to_combine:
+            combined_costs_summary_report = read_and_combine_files(settings, settings.costs_summary_report_name)
+        if settings.model_runs_with_scenarios_to_combine:
+            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.costs_summary_report_name)
+            combined_costs_summary_report = pd.concat([combined_costs_summary_report, combined_scenarios_report], axis=0, ignore_index=True)
         combined_costs_summary_report = combined_costs_summary_report.reset_index(drop=True)
-        combined_costs_summary_report, non_emission_costs_summary = CostsReport(combined_costs_summary_report).new_report(settings)
+        if settings.model_runs_to_combine or settings.model_runs_with_scenarios_to_combine:
+            combined_costs_summary_report, non_emission_costs_summary = CostsReport(combined_costs_summary_report).new_report(settings)
         combined_costs_summary_report = post_combinator_main(settings, combined_costs_summary_report, settings.costs_summary_report_name)
         # calc emission costs since they were removed in the CostsReport class
         new_emission_costs = calc_emission_costs(settings, inventory_summary, inventory_summary_id_cols)
@@ -87,11 +103,15 @@ def main(settings):
 
     if settings.run_costs_report:
         print('Working on costs reports')
-        combined_costs_report = read_and_combine_files(settings, settings.costs_report_name)
-        combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.costs_report_name)
-        combined_costs_report = pd.concat([combined_costs_report, combined_scenarios_report], axis=0, ignore_index=True)
+        combined_costs_report = pd.DataFrame()
+        if settings.model_runs_to_combine:
+            combined_costs_report = read_and_combine_files(settings, settings.costs_report_name)
+        if settings.model_runs_with_scenarios_to_combine:
+            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.costs_report_name)
+            combined_costs_report = pd.concat([combined_costs_report, combined_scenarios_report], axis=0, ignore_index=True)
         combined_costs_report = combined_costs_report.reset_index(drop=True)
-        combined_costs_report, non_emission_costs = CostsReport(combined_costs_report).new_report(settings)
+        if settings.model_runs_to_combine or settings.model_runs_with_scenarios_to_combine:
+            combined_costs_report, non_emission_costs = CostsReport(combined_costs_report).new_report(settings)
         combined_costs_report = post_combinator_main(settings, combined_costs_report, settings.costs_report_name)
         # calc emission costs since they were removed in the CostsReport class
         new_emission_costs = calc_emission_costs(settings, inventory, inventory_id_cols)
@@ -103,26 +123,39 @@ def main(settings):
 
     if settings.run_tech_utilization_report:
         print('Working on tech utilization reports')
-        tech_pens_report = read_and_combine_files(settings, settings.tech_pens_report_name)
-        combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.tech_pens_report_name)
-        tech_pens_report = pd.concat([tech_pens_report, combined_scenarios_report], axis=0, ignore_index=True)
+        tech_pens_report = pd.DataFrame()
+        if settings.model_runs_to_combine:
+            tech_pens_report = read_and_combine_files(settings, settings.tech_pens_report_name)
+        if settings.model_runs_with_scenarios_to_combine:
+            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.tech_pens_report_name)
+            tech_pens_report = pd.concat([tech_pens_report, combined_scenarios_report], axis=0, ignore_index=True)
         tech_pens_report = tech_pens_report.reset_index(drop=True)
 
         # need sales from compliance report if running the tech pens report
         if settings.run_compliance_report:
             pass
         else:
-            combined_compliance_report = read_and_combine_files(settings, settings.compliance_report_name)
-            combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.compliance_report_name)
-            combined_compliance_report = pd.concat([combined_compliance_report, combined_scenarios_report], axis=0, ignore_index=True)
+            combined_compliance_report = pd.DataFrame()
+            if settings.model_runs_to_combine:
+                combined_compliance_report = read_and_combine_files(settings, settings.compliance_report_name)
+            if settings.model_runs_with_scenarios_to_combine:
+                combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.compliance_report_name)
+                combined_compliance_report = pd.concat([combined_compliance_report, combined_scenarios_report], axis=0, ignore_index=True)
             combined_compliance_report = combined_compliance_report.reset_index(drop=True)
+
+
+            # combined_compliance_report = read_and_combine_files(settings, settings.compliance_report_name)
+            # combined_scenarios_report = read_files_and_combine_scenarios(settings, settings.compliance_report_name)
+            # combined_compliance_report = pd.concat([combined_compliance_report, combined_scenarios_report], axis=0, ignore_index=True)
+            # combined_compliance_report = combined_compliance_report.reset_index(drop=True)
             combined_compliance_report = pd.DataFrame(combined_compliance_report.loc[combined_compliance_report['Model Year'] != 'TOTAL', :])
             combined_compliance_report = pd.DataFrame(combined_compliance_report.loc[combined_compliance_report['Manufacturer'] != 'TOTAL', :])
             combined_compliance_report['Model Year'] = combined_compliance_report['Model Year'].astype(int)
         cols = ['Scenario Name', 'Model Year', 'Manufacturer', 'Reg-Class', 'Sales']
         sales = combined_compliance_report[cols]
 
-        tech_pens_report = TechReport(tech_pens_report).new_report(sales)
+        if settings.model_runs_to_combine or settings.model_runs_with_scenarios_to_combine:
+            tech_pens_report = TechReport(tech_pens_report).new_report(settings, sales)
         tech_pens_report = post_combinator_main(settings, tech_pens_report, settings.tech_pens_report_name)
         tech_pens_report.to_csv(settings.path_postproc_runs_runid_outputs / f'{settings.tech_pens_report_name}_{settings.filename_id}.csv', index=False)
 

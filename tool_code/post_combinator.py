@@ -34,6 +34,8 @@ def data_to_use(settings, df, report_name):
     if report_name == settings.costs_summary_report_name or report_name == settings.costs_report_name:
         # eliminate discounted data since those are calculated in this tool
         df = pd.DataFrame(df.loc[df['Disc-Rate'] == 0, :])
+        if df.columns.tolist().__contains__('Calendar Year'):
+            df = df.loc[df['Calendar Year'] >= settings.summary_start_year, :]
 
     return df
 
@@ -61,7 +63,10 @@ def post_combinator_main(settings, report_df, report_name):
             report_at_path = data_to_use(settings, report_at_path, report_name)
             if report_name == settings.tech_pens_report_name:
                 report_at_path = TechReport(report_at_path).sum_cols(report_at_path, 'BEV', 'PHEV')
-            report_at_path = pd.DataFrame(report_at_path, columns=report_df.columns)
+            if report_df.empty:
+                pass
+            else:
+                report_at_path = pd.DataFrame(report_at_path, columns=report_df.columns)
             result = pd.concat([result, report_at_path], axis=0, ignore_index=True)
 
         result = pd.concat([report_df, result], axis=0, ignore_index=True)
