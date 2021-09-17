@@ -175,6 +175,15 @@ def main(settings):
         'Results': [tool_code.__version__, settings.path_postproc_runs_runid, settings.time_of_postproc_run, elapsed_time, settings.run_details],
         'Units': ['', '', 'YYYYmmdd-HHMMSS', 'seconds', '']})
     summary_log.to_csv(settings.path_postproc_runs_runid / 'summary_log.csv', index=False)
+
+    # add run to run_log
+    df = summary_log[['Item', 'Results']].set_index('Item').transpose()
+    try:
+        run_log = pd.read_csv(settings.path_postproc_runs / 'run_log.csv')
+        run_log = pd.concat([run_log, df], axis=0, ignore_index=True)
+    except:
+        run_log = df.copy()
+    run_log.to_csv(settings.path_postproc_runs / 'run_log.csv', index=False)
     print(f'Results have been saved to {settings.path_postproc_runs_runid}')
 
 
