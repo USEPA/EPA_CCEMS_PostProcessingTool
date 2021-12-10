@@ -1,7 +1,7 @@
-post_combinator module
+energy_security module
 ======================
 
-.. automodule:: post_combinator
+.. automodule:: energy_security
    :members:
    :undoc-members:
    :show-inheritance:

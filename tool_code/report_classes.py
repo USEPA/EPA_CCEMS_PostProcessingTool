@@ -1,26 +1,37 @@
 import pandas as pd
-import attr
+
+from tool_code.off_cycle_costs import calc_off_cycle_costs_in_compliance_report
 
 
-@attr.s
 class ComplianceReport:
     """
     Note:
         This class controls the summation, sales weighting, etc., of framework OEM and non-framework OEM results into a single fleet for the compliance report.
+        The costs in the CCEMS compliance report are absolute for the CCEMS baseline scenario (settings.base_scenario_name) and then incremental to that for other
+        scenarios. It is important that the baseline scenario be consistent for all runs processed by this tool since that scenario is scrubbed out of the
+        post-processed file. For incremental costs between, for example, the No Action and any Action scenario in the tool, the results will only be valid
+        if the CCEMS incremental Action scenario costs are relative to the same baseline scenario.
 
     """
-    report_df = attr.ib()
+
+    def __init__(self, report_df):
+        self.report_df = report_df
 
     def new_report(self, settings):
         df = self.report_df.copy().fillna(0)
         id_args = ['Scenario Name', 'Model Year']
         merge_cols = ['Scenario Name', 'Model Year', 'Manufacturer', 'Reg-Class']
 
-        # eliminate some total rows since those need re-calc (drop model year total row because .... what is it anyway?)
+        # eliminate some total rows since those need re-calc (drop model year total row since unnecessary)
         df = pd.DataFrame(df.loc[df['Model Year'] != 'TOTAL', :])
         df = pd.DataFrame(df.loc[df['Model Year'] >= settings.summary_start_year, :])
         df = pd.DataFrame(df.loc[df['Manufacturer'] != 'TOTAL', :])
         df['Model Year'] = df['Model Year'].astype(int)
+
+        # calc CO2_2cycle from CAFE 2-cycle
+        df.insert(df.columns.get_loc('CO-2 Rating') + 1, 'CO-2 2cycle', 8887 / df['CAFE (2-cycle)'])
+        df.insert(df.columns.get_loc('CO-2 Rating') + 2, 'CO-2 Credit Use',
+                  df['CO-2 2cycle'] - df['CO-2 Rating'] - df['AC Efficiency'] - df['AC Leakage'] - df['Off-Cycle Credits'])
 
         # limit reg class to pass car and light truck and TOTAL (reg class TOTAL is specific to mfr so doesn't need recalc)
         df = pd.DataFrame(df.loc[(df['Reg-Class'] == 'Passenger Car') | (df['Reg-Class'] == 'Light Truck') | (df['Reg-Class'] == 'TOTAL'), :]).reset_index(drop=True)
@@ -34,7 +45,7 @@ class ComplianceReport:
         df_sum_regclass_totals.insert(df_sum_regclass_totals.columns.get_loc('Reg-Class'), 'Manufacturer', 'TOTAL')
         df_sum = pd.concat([df_sum, df_sum_regclass_totals], axis=0, ignore_index=True)
         df_sum = df_sum.reset_index(drop=True)
-        
+
         # work on sales weighted averages
         for arg in settings.args_to_sales_weight:
             df_sales_weight.insert(len(df_sales_weight.columns), f'{arg}*Sales', df_sales_weight[arg] * df_sales_weight['Sales'])
@@ -70,19 +81,22 @@ class ComplianceReport:
         df_sales_vmt_weight.drop(columns='Sales', inplace=True)
 
         df = df_sum.merge(df_sales_weight, on=merge_cols, how='left').merge(df_sales_vmt_weight, on=merge_cols, how='left')
-        # df = df_sum.merge(df_sales_weight, on=merge_cols, how='left')
+
+        # calc off-cycle credits and adjust impacted attributes
+        df = calc_off_cycle_costs_in_compliance_report(settings, df)
 
         return df
 
 
-@attr.s
 class CostsReport:
     """
     Note:
         This class controls the summation, sales weighting, etc., of framework OEM and non-framework OEM results into a single fleet for the cost report.
 
     """
-    report_df = attr.ib()
+
+    def __init__(self, report_df):
+        self.report_df = report_df
 
     def new_report(self, settings):
         if self.report_df.columns.tolist().__contains__('Age'):
@@ -132,14 +146,17 @@ class CostsReport:
         return df, non_emission_costs
 
 
-@attr.s
 class EffectsReport:
     """
     Note:
         This class controls the summation, sales weighting, etc., of framework OEM and non-framework OEM results into a single fleet for the effects report.
+        Some data reported by CCEMS are excluded from the effects reports of this tool. The data to exclude are set in the SetInputs class and include metrics
+        having keywords such as 'Admissions', 'Asthma', 'Attacks', 'Bronchitis', 'Premature', 'Respiratory', 'Restricted', 'Work Loss'.
 
     """
-    report_df = attr.ib()
+
+    def __init__(self, report_df):
+        self.report_df = report_df
 
     def new_report(self, settings):
         if self.report_df.columns.tolist().__contains__('Average Age'):
@@ -201,7 +218,6 @@ class EffectsReport:
         return df
 
 
-@attr.s
 class TechReport:
     """
     Note:
@@ -209,7 +225,9 @@ class TechReport:
         utilization report.
 
     """
-    report_df = attr.ib()
+
+    def __init__(self, report_df):
+        self.report_df = report_df
 
     def new_report(self, settings, sales_df):
         df = self.report_df.copy()
@@ -239,13 +257,104 @@ class TechReport:
 
         # sum some columns
         df = self.sum_cols(df, 'BEV', 'PHEV', 'HCR')
+        df.insert(len(df.columns), 'BEV+PHEV', df[['BEV', 'PHEV']].sum(axis=1))
 
         return df
 
-    def sum_cols(self, df, *identifiers):
+    @staticmethod
+    def sum_cols(df, *identifiers):
         for identifier in identifiers:
             df.insert(len(df.columns), identifier, df.loc[:, [x for x in df.columns if x.__contains__(identifier)]].sum(axis=1))
         return df
+
+
+class VehiclesReport:
+    """
+    Note:
+        This class controls the summation, sales weighting, etc., of framework OEM and non-framework OEM results into a single fleet for the vehicles
+        report.
+
+    """
+
+    def __init__(self, report_df):
+        self.report_df = report_df
+
+    def new_report(self, settings):
+        """
+
+        Note:
+            This method returns a DataFrame of sales-weighted costs for the different powertrain techs for each scenario and model year (those
+            specified in settings.run_model_years). It does not return the CCEMS vehicles report.
+
+        Parameters:
+            settings: The SetInputs class.
+
+        Return:
+            A DataFrame of Sales, Sales Share, Sales-Weighted Avg Cost Add and Contribution to the cost/vehicle in each model year for each scenario.
+
+        """
+        cols = ['Scenario Name', 'Model Year', 'Manufacturer', 'Powertrain', 'Tech Class', 'Sales', 'Tech Cost', 'TechKey']
+        df = pd.DataFrame(self.report_df, columns=cols)
+        scenario_names = pd.Series(df['Scenario Name']).unique()
+        manufacturers = pd.Series(df['Manufacturer']).unique()
+        powertrains = pd.Series(df['Powertrain']).unique()
+        tech_classes = pd.Series(df['Tech Class']).unique()
+        id_args = ['Scenario Name', 'Model Year', 'Powertrain']
+
+        return_df = pd.DataFrame(columns=['Scenario Name', 'Model Year', 'Powertrain', 'Sales', 'Share', 'SalesWtdAvg_Cost_Add', 'Contribution to $/veh'])
+        for scenario_name in scenario_names:
+            for model_year in settings.run_model_years:
+                my_data = df.loc[(df['Scenario Name'] == scenario_name) & (df['Model Year'] == model_year), :]
+                my_sales = my_data['Sales'].sum(axis=0)
+                for powertrain in powertrains:
+                    if powertrain != 'MHEV':
+                        tech_data = my_data.loc[my_data['Powertrain'] == powertrain, :]
+                        tech_sales, wtd_avg_cost = self.calc_results(tech_data)
+                        share = tech_sales / my_sales
+                        contribution = wtd_avg_cost * share
+                        new_data = pd.DataFrame({'Scenario Name': [scenario_name],
+                                                 'Model Year': [model_year],
+                                                 'Powertrain': [powertrain],
+                                                 'Sales': [tech_sales],
+                                                 'Share': [share],
+                                                 'SalesWtdAvg_Cost_Add': [wtd_avg_cost],
+                                                 'Contribution to $/veh': [contribution],
+                                                 })
+                        return_df = pd.concat([return_df, new_data], ignore_index=True, axis=0)
+                    else:
+                        for MHEV_tech in ['SS12V', 'BISG']:
+                            tech_data = my_data.loc[my_data['TechKey'].str.contains(MHEV_tech)]
+                            tech_sales, wtd_avg_cost = self.calc_results(tech_data)
+                            share = tech_sales / my_sales
+                            contribution = wtd_avg_cost * share
+                            new_data = pd.DataFrame({'Scenario Name': [scenario_name],
+                                                     'Model Year': [model_year],
+                                                     'Powertrain': [MHEV_tech],
+                                                     'Sales': [tech_sales],
+                                                     'Share': [share],
+                                                     'SalesWtdAvg_Cost_Add': [wtd_avg_cost],
+                                                     'Contribution to $/veh': [contribution],
+                                                     })
+                            return_df = pd.concat([return_df, new_data], ignore_index=True, axis=0)
+
+        return return_df
+
+    @staticmethod
+    def calc_results(tech_data):
+        """
+
+        Parameters:
+            tech_data: A DataFrame of powertrain specific data for a given scenario and model year.
+
+        Return:
+            The sales of vehicles with the given powertrain tech and the sales-weighted average cost of that powertrain tech.
+
+        """
+        weighted_cost = tech_data[['Sales', 'Tech Cost']].product(axis=1).sum(axis=0)
+        tech_sales = tech_data['Sales'].sum(axis=0)
+        wtd_avg_cost = weighted_cost / tech_sales
+
+        return tech_sales, wtd_avg_cost
 
 
 if __name__ == '__main__':

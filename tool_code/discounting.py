@@ -128,7 +128,7 @@ def calc_present_values(settings, dict_of_values, *non_emission_cost_args):
         settings: The SetInputs class.\n
         dict_of_values: A Dictionary of values with keys of:\n
             (scenario_name, year, reg_class, discount_rate) or (scenario_name, model_year, age, calendar_year, reg_class, discount_rate)\n
-        non_emission_cost_args: Args to be present valued (?) at both social discount rates.
+        non_emission_cost_args: Attributes for which present values are needed at both social discount rates.
 
     Return:
         A Dictionary of present values (for annual values: cumulative summations through the given calendar year; for model year lifetime

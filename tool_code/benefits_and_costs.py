@@ -3,6 +3,17 @@
 def calc_social_impacts(settings, dict_of_values):
     """
     Note:
+        The CCEMS calculates, internal to CCEMS, terms referred to as "Total Social Benefits," "Total Social Costs" and "Net Social Benefits." The tool characterizes some parameters differently than does
+        the CCEMS and also introduces some new parameters not included in the CCEMS calculations. All of these parameters are calculated relative to a base-case scenario as set in the SetInputs class.
+        The current setting is "2020hold" and, as such, the attributes calculated here are all calculated relative to that base scenario.
+
+        The base scenario is used only for the purpose of calculating Benefit-Cost Analysis attributes relative to a common scenario. As such, the reporting of these parameters in this tool's output files should not
+        be seen as absolute valuations. Instead, these attributes are relative to the base scenario (default="2020hold") which allows for calculation of incremental results relative to any scenario in the
+        output files. For example, in the FRM analysis, the No Action scenario is comprised of CA framework OEMs meeting the framework while non-framework OEMs meet the SAFE FRM. The no action scenario
+        contains the keyword "no-action" in the Scenario Name. The action scenario is comprised of framework OEMs meeting the framework and then meeting the final standards for 2023 and later while
+        non-framework OEMs meet SAFE standards and then the final standards for 2023 and later. The scenario reflecting the final standards contains the keyword "final" in the Scenario Name.
+        These two scenarios should be chosen carefully from the output files to calculate any incremental costs, benefits and net benefits of the final standards (or alternative) relative to the no action case.
+
         The dictionary key = (scenario_name, year, reg_class, discount_rate) or (scenario_name, model_year, age, calendar_year, reg_class, discount_rate)
 
     Parameters:
@@ -59,18 +70,12 @@ def calc_social_impacts(settings, dict_of_values):
         delta_fatality_costs_net = this_fatality_costs_net - base_fatality_costs_net
 
         base_nonfatal_crash_costs = dict_of_values[base_key][settings.non_fatal_crash_costs]
-        # base_nonfatal_injury_costs = dict_of_values[base_key][settings.non_fatal_injury_costs]
-        # base_property_damage_crash_costs = dict_of_values[base_key][settings.property_damage_crash_costs]
         base_nonfatal_crash_risk_value = dict_of_values[base_key][settings.non_fatal_crash_risk_value]
         base_nonfatal_crash_costs_net = base_nonfatal_crash_costs - base_nonfatal_crash_risk_value
-        # base_nonfatal_crash_costs_net = base_nonfatal_injury_costs + base_property_damage_crash_costs - base_nonfatal_crash_risk_value
 
         this_nonfatal_crash_costs = dict_of_values[key][settings.non_fatal_crash_costs]
-        # this_nonfatal_injury_costs = dict_of_values[key][settings.non_fatal_injury_costs]
-        # this_property_damage_crash_costs = dict_of_values[key][settings.property_damage_crash_costs]
         this_nonfatal_crash_risk_value = dict_of_values[key][settings.non_fatal_crash_risk_value]
         this_nonfatal_crash_costs_net = this_nonfatal_crash_costs - this_nonfatal_crash_risk_value
-        # this_nonfatal_crash_costs_net = this_nonfatal_injury_costs + this_property_damage_crash_costs - this_nonfatal_crash_risk_value
 
         delta_nonfatal_crash_costs_net = this_nonfatal_crash_costs_net - base_nonfatal_crash_costs_net
 

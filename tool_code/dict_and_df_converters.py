@@ -33,6 +33,9 @@ def create_costs_dict(df, id_cols):
         if len(id_cols) == 5:
             keys = pd.Series(zip(dict_df[id_cols[0]], dict_df[id_cols[1]], dict_df[id_cols[2]], dict_df[id_cols[3]],
                                  dict_df[id_cols[4]], [0] * len(dict_df)))
+        if len(id_cols) == 6:
+            keys = pd.Series(zip(dict_df[id_cols[0]], dict_df[id_cols[1]], dict_df[id_cols[2]], dict_df[id_cols[3]],
+                                 dict_df[id_cols[4]], dict_df[id_cols[5]], [0] * len(dict_df)))
         dict_df.drop(columns=id_cols, inplace=True) # these can be put back in after converting back to df
     dict_df.insert(0, 'key', keys)
     dict_df.set_index('key', inplace=True)
