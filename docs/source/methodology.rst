@@ -424,12 +424,12 @@ This tool then calculates new petroleum market externalities, as follows:
 .. math::
     :label: petrol_market_externalities
 
-    PetroleumMarketExternalities = BarrelsOfImportedOil \times\frac{$} {barrel}
+    PetroleumMarketExternalities = BarrelsOfImportedOil \times\frac{USD} {barrel}
 
 where,
 
 - :math:`BarrelsOfImportedOil` is from Equation :eq:`imported_oil_barrels`
-- :math:`$/barrel` is from the Oil Security Premia input file
+- :math:`USD/barrel` is US dollars per barrel from the Oil Security Premia input file
 
 The energy security benefits can then be calculated as:
 
@@ -478,11 +478,11 @@ are calculated as shown in Equation :eq:`emission_benefits`. Note that this tool
 
     & EmissionBenefit_{Source;Pollutant;ApplicableDiscountRate}
 
-    & = \small\frac{$} {ton} \times \small(tons_{Source;Pollutant;ApplicableDiscountRate;Action} - tons_{Source;Pollutant;ApplicableDiscountRate;NoAction})
+    & = \small\frac{USD} {ton} \times \small(tons_{Source;Pollutant;ApplicableDiscountRate;Action} - tons_{Source;Pollutant;ApplicableDiscountRate;NoAction})
 
 where,
 
-- :math:`$/ton` is from the tool's inputs files and is unique to *Source* and *Pollutant* and *DiscountRate*
+- :math:`USD/ton` is US dollars per ton from the tool's inputs files and is unique to *Source* and *Pollutant* and *DiscountRate*
 - :math:`Source` refers to Refinery, Electric Generating Unit (EGU) or Tailpipe
 - Note that the emission benefits are calculated unique to each *Source* but are summed into "tailpipe" and "upstream" categories in the societal cost-related output files of this tool.
 
