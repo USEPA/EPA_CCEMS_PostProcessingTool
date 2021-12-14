@@ -424,7 +424,7 @@ This tool then calculates new petroleum market externalities, as follows:
 .. math::
     :label: petrol_market_externalities
 
-    PetroleumMarketExternalities = BarrelsOfImportedOil \times \frac{$} {barrel}
+    PetroleumMarketExternalities = BarrelsOfImportedOil \times\frac{$} {barrel}
 
 where,
 
